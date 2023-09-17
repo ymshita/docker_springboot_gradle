@@ -1,0 +1,59 @@
+version: '3.0'
+services:
+  app:
+    image: openjdk:17-jdk-bullseye
+    container_name: "${APP}_app"
+    tty: true
+    volumes:
+      - ../${APP}:/app
+    working_dir: /app
+    command: ./gradlew bootRun
+    environment:
+      DB_DRIVER_CLASS_NAME: ${DB_DRIVER_CLASS_NAME}
+      DB_CONNECTION: ${DB_CONNECTION}
+      APP: ${APP}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_URL: jdbc:${DB_CONNECTION}://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
+      # spring.datasource.driverClassName: "${DB_DRIVER_CLASS_NAME}"
+      # spring.datasource.url: jdbc:${DB_CONNECTION}://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
+      # spring.datasource.username: ${DB_USERNAME}
+      # spring.datasource.password: ${DB_PASSWORD}
+      spring.redis.host: redis
+    depends_on:
+      - db
+      - redis
+  db:
+    build: ./infra/mysql
+    container_name: "${APP}_db"
+    volumes:
+      - db-store:/var/lib/mysql
+      - ./infra/mysql/initdb:/docker-entrypoint-initdb.d
+      - ./infra/mysql/logs:/var/log/mysql
+    ports:
+      - 33060:3306
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=${DB_PASSWORD}
+      - MYSQL_RANDOM_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+  redis:
+    container_name: "${APP}_session"
+    image: redis:7.0-rc1
+  nginx:
+    container_name: "${APP}_nginx"
+    image: nginx:1.21
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+volumes:
+  db-store:
+    name: ${APP}_db-store
+  db-testing-store:
+    name: ${APP}_db-testing-store

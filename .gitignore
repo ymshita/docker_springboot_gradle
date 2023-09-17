@@ -1,24 +1,52 @@
-# Compiled class file
-*.class
+backend/vendor/composer/autoload_classmap.php
+backend/vendor/composer/autoload_files.php
+backend/vendor/composer/autoload_psr4.php
+backend/vendor/composer/autoload_static.php
+backend/vendor/composer/installed.json
 
-# Log file
-*.log
+backend/vendor/composer/
+backend/vendor/
+/vendor/
+backend/
+_backend/
+/app-*
+node_modules/
+npm-debug.log
+yarn-error.log
+# backend/public/css
+backend/public/json
+backend/public/mix-manifest.json
+backend/public/js/app.js
+backend/public/css/app.css
+backend/public/out/
+backend/public/*.woff
+backend/public/*.woff2
+backend/package-lock.json
+backend/yarn.lock
+.devcontainer
 
-# BlueJ files
-*.ctxt
+# Laravel 4 specific
+bootstrap/compiled.php
+app/storage/
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+# Laravel 5 & Lumen specific
+public/storage
+public/hot
+storage/*.key
+.env
+Homestead.yaml
+Homestead.json
+/.vagrant
+backend/.vscode/launch.json
+backend/public/.htpasswd
+.DS_Store
+backend/storage/google/credentials.json
+backend/storage/google/token.json
+backend/storage/google/credentials_web.json
+backend/storage/google/credentials_desctop.json
+infra/nginx/certs/*
+infra/nginx/private/pass_file.txt
+infra/mysql/logs/*
+.vscode/settings.json
+infra/nginx/default.conf
+tucuru/
