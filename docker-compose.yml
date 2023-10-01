@@ -1,13 +1,23 @@
 version: '3.0'
 services:
   app:
-    image: openjdk:17-jdk-bullseye
+    build:
+      context: ../${APP}
+      dockerfile: ../docker_springboot_gradle/infra/java/Dockerfile
+      args:
+        DB_DRIVER_CLASS_NAME: ${DB_DRIVER_CLASS_NAME}
+        DB_CONNECTION: ${DB_CONNECTION}
+        APP: ${APP}
+        DB_USERNAME: ${DB_USERNAME}
+        DB_PASSWORD: ${DB_PASSWORD}
+        DB_URL: jdbc:${DB_CONNECTION}://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
+        JAVA_OPTS: "-Dspring.devtools.restart.enabled=true -Dspring.devtools.livereload.enabled=true"
     container_name: "${APP}_app"
     tty: true
     volumes:
       - ../${APP}:/app
     working_dir: /app
-    command: ./gradlew bootRun
+    command: ./gradlew -t classes
     environment:
       DB_DRIVER_CLASS_NAME: ${DB_DRIVER_CLASS_NAME}
       DB_CONNECTION: ${DB_CONNECTION}
@@ -15,11 +25,7 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_URL: jdbc:${DB_CONNECTION}://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
-      # spring.datasource.driverClassName: "${DB_DRIVER_CLASS_NAME}"
-      # spring.datasource.url: jdbc:${DB_CONNECTION}://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
-      # spring.datasource.username: ${DB_USERNAME}
-      # spring.datasource.password: ${DB_PASSWORD}
-      spring.redis.host: redis
+      JAVA_OPTS: "-Dspring.devtools.restart.enabled=true -Dspring.devtools.livereload.enabled=true"
     depends_on:
       - db
       - redis

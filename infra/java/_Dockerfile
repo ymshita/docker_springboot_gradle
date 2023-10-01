@@ -1,0 +1,20 @@
+# ベースイメージの指定
+FROM openjdk:17-jdk-bullseye as builder
+
+# アプリケーションのディレクトリを作成
+WORKDIR /app
+
+# アプリケーションのソースコードをコピー
+COPY . /app
+
+# アプリケーションをビルド
+RUN ./gradlew clean build --stacktrace --debug
+
+# 実行用のイメージを作成
+FROM openjdk:17-jdk-bullseye
+
+# ビルドしたアプリケーションをコピー
+COPY --from=builder /app/build/libs/*.jar /app.jar
+
+# アプリケーションの実行
+CMD ["java", "-jar", "/app.jar"]
