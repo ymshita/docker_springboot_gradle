@@ -49,3 +49,9 @@ docker-compose up -d
 docker-compose config
 docker-compose build --no-cache
 ```
+
+### テスト
+
+```bash
+docker-compose exec app ./gradlew test
+```
