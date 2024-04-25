@@ -9,7 +9,8 @@
 - `infra/java/entrypoint.sh` を `../${APP}` にコピー
 
 ```bash
-cp infra/java/entrypoint.sh ../xxxx
+cp infra/java/entrypoint.sh ../xxxx \
+&& chmod +x ../xxxx/entrypoint.sh
 ```
 
 - コンテナを実行(`--build`指定は初回のみ)
