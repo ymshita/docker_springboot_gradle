@@ -6,10 +6,10 @@
 
 - .env ファイルの内容を設定
 
-- `infra/java/entripoint.sh` を `../${APP}` にコピー
+- `infra/java/entrypoint.sh` を `../${APP}` にコピー
 
 ```bash
-cp infra/java/entripoint.sh ../xxxx
+cp infra/java/entrypoint.sh ../xxxx
 ```
 
 - コンテナを実行(`--build`指定は初回のみ)
