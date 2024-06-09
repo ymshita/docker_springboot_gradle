@@ -1,4 +1,4 @@
-version: '3.0'
+version: "3.0"
 services:
   app:
     build:
@@ -26,6 +26,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_URL: jdbc:${DB_CONNECTION}://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
       JAVA_OPTS: "-Dspring.devtools.restart.enabled=true -Dspring.devtools.livereload.enabled=true"
+      APP_PORT: ${APP_PORT}
     depends_on:
       - db
       - redis
@@ -37,7 +38,7 @@ services:
       - ./infra/mysql/initdb:/docker-entrypoint-initdb.d
       - ./infra/mysql/logs:/var/log/mysql
     ports:
-      - 33060:3306
+      - "${DB_PORT}:${DB_PORT}"
     environment:
       - MYSQL_DATABASE=${DB_DATABASE}
       - MYSQL_USER=${DB_USERNAME}
@@ -53,11 +54,20 @@ services:
     image: nginx:1.21
     restart: always
     ports:
-      - 80:80
+      - "${APP_PORT}:${APP_PORT}"
     volumes:
       - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./infra/nginx/default.conf.template:/etc/nginx/conf.d/default.conf.template
     depends_on:
       - app
+    environment:
+      - WEB_DOMAIN=${WEB_DOMAIN}
+      - APP_PORT=${APP_PORT}
+      - LISTEN=${APP_PORT}
+      - SSL=${SSL}
+      - PROTOCOL=${PROTOCOL}
+    command: |
+      /bin/bash -c "envsubst '$$WEB_DOMAIN$$APP_PORT$$LISTEN$$SSL$$PROTOCOL' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
 volumes:
   db-store:
     name: ${APP}_db-store

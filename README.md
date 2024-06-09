@@ -2,15 +2,25 @@
 
 ## 環境構築
 
-- `.env.example` から .env ファイルを作成し設定
+- `.env.example` から .env ファイルを作成し、適宜設定する
+
+```bash
+cp .env.example .env
+```
+
+- infra/nginx/default.conf をファイルとして追加しておく
+
+```bash
+touch infra/nginx/default.conf
+```
 
 - .env ファイルの内容を設定
 
 - `infra/java/entrypoint.sh` を `../${APP}` にコピー
 
 ```bash
-cp infra/java/entrypoint.sh ../xxxx \
-&& chmod +x ../xxxx/entrypoint.sh
+APP=your_app_name cp infra/java/entrypoint.sh ../${APP}/ \
+&& chmod +x ../${APP}/entrypoint.sh
 ```
 
 - コンテナを実行(`--build`指定は初回のみ)

@@ -1,0 +1,7 @@
+server {
+   listen ${LISTEN};
+
+    location / {
+        proxy_pass ${PROTOCOL}//app:${LISTEN};
+    }
+}
